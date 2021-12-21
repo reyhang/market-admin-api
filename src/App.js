@@ -1,23 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
+import Header from "./components/Layout/Header/Header"
+import Sidebar from "./components/Layout/Sidebar/Sidebar"
+import Footer from './components/Layout/Footer/Footer';
+import DataTable from './components/Views/DataTable.js/DataTable';
+import ProductForm from './components/Views/Product/ProductFrom';
+import Cards from './components/Views/Dashboard/Cards/Cards';
+import Reports from './components/Views/Dashboard/Reports/Reports';
+import RecentSales from './components/Views/Dashboard/RecentSales/RecentSales';
+import Dashboard from './components/Views/Dashboard';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     
+
+<Header/>
+<Sidebar/>
+<Dashboard/>
+<Footer/>
     </div>
   );
 }
