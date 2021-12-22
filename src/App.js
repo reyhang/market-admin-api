@@ -1,25 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
 import Header from "./components/Layout/Header/Header"
 import Sidebar from "./components/Layout/Sidebar/Sidebar"
 import Footer from './components/Layout/Footer/Footer';
 import DataTable from './components/Views/DataTable.js/DataTable';
 import ProductForm from './components/Views/Product/ProductFrom';
-import Cards from './components/Views/Dashboard/Cards/Cards';
-import Reports from './components/Views/Dashboard/Reports/Reports';
-import RecentSales from './components/Views/Dashboard/RecentSales/RecentSales';
 import Dashboard from './components/Views/Dashboard';
+
+import { Route, Routes } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
+import Login from './components/Views/Login/Login';
 
 function App() {
   return (
-    <div className="App">
-     
+    <BrowserRouter>
+      <div className="App">
+        <Header />
+        <Sidebar />
 
-<Header/>
-<Sidebar/>
-<Dashboard/>
-<Footer/>
-    </div>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/Products" element={<DataTable />} />
+          <Route path="Products/Add" element={<ProductForm />} />
+          <Route path="a" element={<Login />} />
+        </Routes>
+
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 
