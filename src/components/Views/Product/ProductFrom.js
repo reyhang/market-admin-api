@@ -1,7 +1,36 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function ProductForm() {
+  const [product, setProduct] = useState({
+    title: '',
+    price: '',
+    barcode: '',
+    imageUrl: '',
+  });
+
+  const handleChange = (event) => {
+    setProduct({ ...product, [event.target.name]:event.target.value });
+
+    
+  };
+
+
+  const addProduct = () => {
+    
+    axios
+      .post("http://localhost:3000/products", product)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+
+
   return (
     <main id="main" className="main">
       <div className="pagetitle">
@@ -26,26 +55,55 @@ export default function ProductForm() {
                 <form className="row g-4 justify-content-center">
                   <div className="col-4">
                     <label className="form-label">Ürün İsmi</label>
-                    <input type="text" className="form-control" id="title" />
+                    <input
+                      className="form-control"
+                      type="text"
+                      name="title"
+                      value={product.title}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div className="col-6">
                     <label className="form-label">Ürün Fiyatı</label>
-                    <input type="number" className="form-control" id="price" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="price"
+                      value={product.price}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div className="col-4">
                     <label className="form-label">Barkod Numarası</label>
                     <input
                       type="string"
                       className="form-control"
-                      id="barcode"
+                      name="barcode"
+                      value={product.barcode}
+                      onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="col-6">
                     <label className="form-label">Ürün Fotoğrafı</label>
-                    <input type="file" className="form-control" id="image" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="imageUrl"
+                      value={product.imageUrl}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
-                  <div className="text-center" style={{ marginTop: 55}}>
-                    <button type="submit" className="btn btn-primary" style={{marginRight:10}} >
+                  <div className="text-center" style={{ marginTop: 55 }}>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      onClick={()=>addProduct()}
+                      style={{ marginRight: 10 }}
+                    >
                       Submit
                     </button>
                     <button type="reset" className="btn btn-secondary">
