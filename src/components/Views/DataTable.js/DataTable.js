@@ -2,21 +2,21 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Pagination, Stack } from "@mui/material";
 import usePagination from "./Pagination";
-import { Box} from "@mui/material";
-
+import { Box } from "@mui/material";
 
 export default function DataTable() {
   const [product, setProduct] = useState([]);
-  let [page,setPage] = useState(1);
-  const PER_PAGE =5;
+  let [page, setPage] = useState(1);
 
-  const count = Math.ceil(product.length/PER_PAGE)
-  const _DATA = usePagination(product,PER_PAGE)
+  const PER_PAGE = 5;
 
-  const handleChange = (e,p) => {
-    setPage(p)
-    _DATA.jump(p)
-  }
+  const count = Math.ceil(product.length / PER_PAGE);
+  const _DATA = usePagination(product, PER_PAGE);
+
+  const handleChange = (e, p) => {
+    setPage(p);
+    _DATA.jump(p);
+  };
 
   const getProducts = async () => {
     await axios
@@ -26,6 +26,15 @@ export default function DataTable() {
       })
       .catch((e) => console.log(e));
   };
+
+  const deleteProduct = async (id) => {
+    await axios
+    .delete(`http://localhost:3000/products/${id}`)
+    .then(console.log("Success"))
+    .catch(e=>alert(e))
+  }
+
+  
 
   useEffect(() => {
     getProducts();
@@ -93,35 +102,40 @@ export default function DataTable() {
                         <th scope="col">Düzenle</th>
                       </tr>
                     </thead>
-                   
-                      <tbody> {_DATA.currentData().map((item, index) => (
-                        <tr >
+
+                    <tbody>
+                      {" "}
+                      {_DATA.currentData().map((item, index) => (
+                        <tr>
                           <th scope="row"> {index + 1} </th>
                           <td>{item.title} </td>
                           <td>{item.price} </td>
                           <td>{item.barcode} </td>
                           <td>
-
                             <i
                               class="bi-dash-square"
-                              
                               style={{ color: "tomato", marginRight: 10 }}
+                              onClick={()=> deleteProduct(item.id)}
                             />
                             <i
                               class="bi-pencil-square"
                               style={{ color: "cornflowerblue" }}
                             />
                           </td>
-                        </tr> ))}
-                      </tbody>
-                   
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
                 </div>
                 <div className="d-flex justify-content-center">
                   <Box>
-                  
-                    <Pagination count={count} color="primary" size="large" page={page} onChange={handleChange} />
-                  
+                    <Pagination
+                      count={count}
+                      color="primary"
+                      size="large"
+                      page={page}
+                      onChange={handleChange}
+                    />
                   </Box>
                 </div>
 
