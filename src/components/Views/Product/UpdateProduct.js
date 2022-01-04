@@ -1,46 +1,89 @@
+import { Icon } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
-export default function ProductForm() {
-  const [product, setProduct] = useState({
-    title: '',
-    price: '',
-    barcode: '',
-    imageUrl: '',
-  });
+export default function UpdateProduct() {
 
-  const handleChange = (event) => {
-    setProduct({ ...product, [event.target.name]:event.target.value });
-
-    
-  };
+  const { id } = useParams();
 
 
-  const addProduct = () => {
-    
+const[product,setProduct] = useState({
+  title:"",
+  price:"",
+  barcode:"",
+  imageUrl:""
+})
+
+
+const handleChange = (event) => {
+  setProduct({ ...product, [event.target.name]:event.target.value });
+};
+
+
+const getProduct = async () => {
+    await axios.get(`http://localhost:3000/products/${id}`)
+    .then((res) => {
+        setProduct({
+          title:res.data.title,
+          price:res.data.price,
+          barcode:res.data.barcode,
+          imageUrl:res.data.imageUrl,
+        })
+    })
+}
+
+ useEffect(() => {
+    getProduct()    
+//eslint-disable-next-line
+}, [])
+
+const updateProduct =  (e) => {
+  e.preventDefault()
+
     axios
-      .post("http://localhost:3000/products", product)
-      .then((response) => {
-        console.log(response);
+      .put(`http://localhost:3000/products/${id}`,product)
+      .then(()=>{
+        getProduct();
+        toast(
+          <div
+       
+            style={{
+              color: "seagreen",
+              
+            }}
+          >
+          Güncelleme başarıyla kaydedildi <i className="bi bi-check2-square" />  
+           
+          </div> ,
+          {
+            position: "top-right",
+            autoClose: 3500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
       })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+      .catch((e) => console.log(e));
+}
 
+  
 
 
   return (
     <main id="main" className="main">
       <div className="pagetitle">
-        <h1>Ürün Ekle</h1>
+        <h1>Ürün Düzenle</h1>
         <nav>
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
               <Link to="/">Anasayfa</Link>
             </li>
-            <li className="breadcrumb-item">Ürün Ekle</li>
+            <li className="breadcrumb-item">Ürün Düzenle</li>
           </ol>
         </nav>
       </div>
@@ -50,30 +93,28 @@ export default function ProductForm() {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">Ürün Ekle</h5>
+                <h5 className="card-title"></h5>
 
-                <form className="row g-4 justify-content-center">
-                  <div className="col-4">
-                    <label className="form-label">Ürün İsmi</label>
+                <form className="row g-4  justify-content-center" onSubmit={updateProduct}>
+                  <div className="col-6">
+                    <label className="form-label" >Ürün İsmi</label>
                     <input
                       className="form-control"
                       type="text"
                       name="title"
                       value={product.title}
-                      onChange={handleChange}
-                      required
-                    />
+                      onChange={handleChange} />
+                    
                   </div>
-                  <div className="col-6">
+                  <div className="col-4">
                     <label className="form-label">Ürün Fiyatı</label>
                     <input
                       type="text"
                       className="form-control"
                       name="price"
                       value={product.price}
-                      onChange={handleChange}
-                      required
-                    />
+                      onChange={handleChange} />
+                    
                   </div>
                   <div className="col-4">
                     <label className="form-label">Barkod Numarası</label>
@@ -82,9 +123,8 @@ export default function ProductForm() {
                       className="form-control"
                       name="barcode"
                       value={product.barcode}
-                      onChange={handleChange}
-                      required
-                    />
+                      onChange={handleChange} />
+                    
                   </div>
                   <div className="col-6">
                     <label className="form-label">Ürün Fotoğrafı</label>
@@ -93,21 +133,19 @@ export default function ProductForm() {
                       className="form-control"
                       name="imageUrl"
                       value={product.imageUrl}
-                      onChange={handleChange}
-                      required
-                    />
+                      onChange={handleChange} />
+
                   </div>
                   <div className="text-center" style={{ marginTop: 55 }}>
                     <button
                       type="submit"
                       className="btn btn-primary"
-                      onClick={()=>addProduct()}
                       style={{ marginRight: 10 }}
                     >
-                      Submit
+                      Güncelle
                     </button>
                     <button type="reset" className="btn btn-secondary">
-                      Reset
+                      Sıfırla
                     </button>
                   </div>
                 </form>

@@ -27,12 +27,7 @@ return (
         <span>Ürün Ekle</span>
       </Link>
     </li>{/* End Profile Page Nav */}
-    <li className="nav-item">
-      <a className="nav-link collapsed" href="pages-faq.html">
-        <i className="bi bi-question-circle" />
-        <span>F.A.Q</span>
-      </a>
-    </li>{/* End F.A.Q Page Nav */}
+
 
   </ul>
 </aside>

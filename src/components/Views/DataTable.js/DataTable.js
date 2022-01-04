@@ -1,14 +1,29 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Pagination, Stack } from "@mui/material";
+import { Pagination } from "@mui/material";
 import usePagination from "./Pagination";
 import { Box } from "@mui/material";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function DataTable() {
   const [product, setProduct] = useState([]);
-  let [page, setPage] = useState(1);
+  let   [page, setPage] = useState(1);
+  const [search,setSearch] = useState("")
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading,setLoading] = useState(false)
+  let [PER_PAGE,setPER_PAGE] = useState(7)
 
-  const PER_PAGE = 5;
+/*  const [data,setData] = useState({
+    title: '',
+    price: '',
+    barcode: '',
+    imageUrl: '',
+  }) */
+
+
+
+
 
   const count = Math.ceil(product.length / PER_PAGE);
   const _DATA = usePagination(product, PER_PAGE);
@@ -23,22 +38,31 @@ export default function DataTable() {
       .get("http://localhost:3000/products")
       .then((response) => {
         setProduct(response.data);
+
       })
       .catch((e) => console.log(e));
   };
 
+
   const deleteProduct = async (id) => {
     await axios
     .delete(`http://localhost:3000/products/${id}`)
-    .then(console.log("Success"))
+    .then(toast( "Ürün Silinmiştir."))
     .catch(e=>alert(e))
   }
 
-  
 
   useEffect(() => {
     getProducts();
-  }, []);
+    setFilteredProducts(product.filter((item) => 
+      item.title.toLowerCase().includes(search.toLowerCase())
+    ))
+  }, [search,product]); 
+
+  if(loading) {
+    return <p>Loading...</p>
+  }
+
 
   return (
     <main id="main" className="main">
@@ -66,14 +90,10 @@ export default function DataTable() {
                   <div className="dataTable-top">
                     <div className="dataTable-dropdown">
                       <label>
-                        <select className="dataTable-selector">
-                          <option value={5}>5</option>
-                          <option value={10} selected>
-                            10
-                          </option>
-                          <option value={15}>15</option>
-                          <option value={20}>20</option>
-                          <option value={25}>25</option>
+                        <select className="dataTable-selector">  
+                          <option value={5} onClick={()=>setPER_PAGE(5)} >5</option>
+                          <option value={15}  >15</option>
+                          <option value={50}>20</option>
                         </select>
                       </label>
                     </div>
@@ -89,9 +109,14 @@ export default function DataTable() {
                           marginBottom: 10,
                           width: 200,
                         }}
-                      />
+                        onChange={(e) => setSearch(e.target.value)}
+                      />                        
+                     
+
                     </div>
                   </div>
+
+               
                   <table className="table datatable">
                     <thead>
                       <tr>
@@ -101,11 +126,36 @@ export default function DataTable() {
                         <th scope="col">Barkod Numarası</th>
                         <th scope="col">Düzenle</th>
                       </tr>
-                    </thead>
+                    </thead><tbody>
+                    {search?                     
+                      filteredProducts.map((item,index)=>
+                         <tr>
+                         <th scope="row"> {index + 1} </th>
+                         <td>{item.title} </td>
+                         <td>{item.price} </td>
+                         <td>{item.barcode} </td>
+                         <td>
+                           <i
+                             class="bi-dash-square"
+                             style={{ color: "tomato", marginRight: 10 }}
+                             onClick={()=> deleteProduct(item.id)}
 
-                    <tbody>
-                      {" "}
-                      {_DATA.currentData().map((item, index) => (
+                           />                            
+                           <Link to={`/products/update/${item.id}`} >
+                           <i
+                             class="bi-pencil-square"
+                             style={{ color: "cornflowerblue" }}
+                             />
+                             </Link>
+                         </td>
+                       </tr>
+                      )
+                      
+                   
+
+                :
+                
+                      _DATA.currentData().map((item, index) => (
                         <tr>
                           <th scope="row"> {index + 1} </th>
                           <td>{item.title} </td>
@@ -116,15 +166,20 @@ export default function DataTable() {
                               class="bi-dash-square"
                               style={{ color: "tomato", marginRight: 10 }}
                               onClick={()=> deleteProduct(item.id)}
-                            />
+
+                            />                            
+                            <Link to={`/products/update/${item.id}`} >
                             <i
                               class="bi-pencil-square"
                               style={{ color: "cornflowerblue" }}
-                            />
+                              />
+                              </Link>
                           </td>
                         </tr>
                       ))}
-                    </tbody>
+                
+                
+                     </tbody>
                   </table>
                 </div>
                 <div className="d-flex justify-content-center">
