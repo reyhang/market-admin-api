@@ -1,83 +1,65 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
 
+export default function Header() {
+  const { logout } = useAuth();
 
-export default function Header () {
-      return (
+  const handleLogOut = () => {
+    logout();
+  };
 
-          <header id="header" className="header fixed-top d-flex align-items-center">
-          <div className="d-flex align-items-center justify-content-between">
-            <Link to="/" className="logo d-flex align-items-center">
-              <img src="/assets/img/logo.png" alt="" />
-              <span className="d-none d-lg-block">MarkteApi</span>
-            </Link>
-          </div>{/* End Logo */}
-          <div className="search-bar">
-            <form className="search-form d-flex align-items-center" method="POST" action="#">
-              <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
-              <button type="submit" title="Search"><i className="bi bi-search" /></button>
-            </form>
-          </div>{/* End Search Bar */}
-          <nav className="header-nav ms-auto">
-            <ul className="d-flex align-items-center">
-              <li className="nav-item d-block d-lg-none">
-                <a className="nav-link nav-icon search-bar-toggle " href="#">
-                  <i className="bi bi-search" />
-                </a>
-              </li>{/* End Search Icon*/}
-             
-              <li className="nav-item dropdown pe-3">
-                <a className="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                  <img src="/assets/img/messages-1.jpg" alt="Profile" className="rounded-circle" />
-                  <span className="d-none d-md-block dropdown-toggle ps-2">M. Anderson</span>
-                </a>{/* End Profile Iamge Icon */}
-                <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                  <li className="dropdown-header">
-                    <h6>Maria Anderson</h6>
-                    <span>Web Designer</span>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
-                      <i className="bi bi-person" />
-                      <span>My Profile</span>
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
-                      <i className="bi bi-gear" />
-                      <span>Account Settings</span>
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                      <i className="bi bi-question-circle" />
-                      <span>Need Help?</span>
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item d-flex align-items-center" href="#">
-                      <i className="bi bi-box-arrow-right" />
-                      <span>Sign Out</span>
-                    </a>
-                  </li>
-                </ul>{/* End Profile Dropdown Items */}
-              </li>{/* End Profile Nav */}
+  return (
+    <header id="header" className="header fixed-top d-flex align-items-center">
+      <div className="d-flex align-items-center justify-content-between">
+        <NavLink to="/" className="logo d-flex align-items-center">
+          <img src="/assets/img/logo.png" alt="" />
+          <span className="d-none d-lg-block">MarkteApi</span>
+        </NavLink>
+      </div>
+      {/* End Logo */}
+
+      <nav className="header-nav ms-auto">
+        <ul className="d-flex align-items-center">
+          <li className="nav-item dropdown pe-3">
+            <a
+              className="nav-link nav-profile d-flex align-items-center pe-0"
+              data-bs-toggle="dropdown"
+            >
+              <img
+                src="/assets/img/messages-1.jpg"
+                alt="Profile"
+                className="rounded-circle"
+              />
+              <span className="d-none d-md-block dropdown-toggle ps-2">
+                M. Anderson
+              </span>
+            </a>
+            {/* End Profile Iamge Icon */}
+            <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+              <li className="dropdown-header">
+                <h6>Maria Anderson</h6>
+              </li>
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+
+              <li>
+                <button
+                  className="dropdown-item d-flex align-items-center"
+                  onClick={handleLogOut}
+                >
+                  <i className="bi bi-box-arrow-right" />
+                  <span>Sign Out</span>
+                </button>
+              </li>
             </ul>
-          </nav>{/* End Icons Navigation */}
-        </header>   
-  
-       
-      );
-    }
+            {/* End Profile Dropdown Items */}
+          </li>
+          {/* End Profile Nav */}
+        </ul>
+      </nav>
+      {/* End Icons Navigation */}
+    </header>
+  );
+}

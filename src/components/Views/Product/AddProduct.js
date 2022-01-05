@@ -34,8 +34,8 @@ export default function AddProduct() {
               color: "seagreen",
             }}
           >
-           {res.data.message}  <i className="bi bi-check2-square" />
-          </div>
+            {res.data.message}  <i className="bi bi-check2-square" />
+            </div>
         );
       })
 
@@ -44,10 +44,11 @@ export default function AddProduct() {
           <div
             style={{
               color: "darksalmon",
+              justifyContent:"center"
             }}
           > 
-          {e.response.data.message[0]}
-            <i className="bi bi-x-square" />
+          <p>Hatalı giriş yaptınız. Lütfen kontrol ediniz.  <i className="bi bi-x-square" /></p>
+           
           </div>
         );
       });
@@ -118,7 +119,7 @@ export default function AddProduct() {
                       width={250}
                       height={200}
                         onUpdate={(err, result) => {
-                          setData(result.text)
+                          setData(result)
                      
                       }}
                     />

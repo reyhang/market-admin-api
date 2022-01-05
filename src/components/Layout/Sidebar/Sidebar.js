@@ -14,15 +14,14 @@ return (
       </Link>
     </li>{/* End Dashboard Nav */}
     <li className="nav-item">
-        <Link to="/Products" className="nav-link collapsed"   > 
+        <Link to="/products" className="nav-link collapsed"   > 
                 <i className="bi bi-menu-button-wide" /><span>Ürün Listesi</span>
-
         </Link>
    
 </li>
     <li className="nav-heading"> </li>
     <li className="nav-item">
-      <Link to="Products/Add" className="nav-link collapsed">
+      <Link to="/products/add" className="nav-link collapsed">
         <i className="bi bi-plus"/>
         <span>Ürün Ekle</span>
       </Link>

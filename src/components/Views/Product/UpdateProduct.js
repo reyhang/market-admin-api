@@ -67,7 +67,16 @@ const updateProduct =  (e) => {
           }
         );
       })
-      .catch((e) => console.log(e));
+      .catch((e) =>toast(
+        <div
+          style={{
+            color: "darksalmon",
+          }}
+        > 
+        {e.response.data.message[0] }
+        <br/>  <i className="bi bi-x-square" />
+        </div>
+      ));
 }
 
   

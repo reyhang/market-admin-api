@@ -25,19 +25,14 @@ const dashBoardRoutes=[
     },{
         path:'/products/add',
         component:React.lazy(()=>import('./components/Views/Product/AddProduct')),
-        name:'AddProducts'
+        name:'AddProduct'
         
     },{
         path:'/products/update/:id',
         component:React.lazy(()=>import('./components/Views/Product/UpdateProduct')),
         name:'UpdateProduct'
         
-    },{
-        path:'/login',
-        component:React.lazy(()=>import('./components/Views/Login/Login')),
-        name:'Login'
-        
-    },
+    }
 ]
 
 

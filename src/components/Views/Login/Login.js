@@ -1,7 +1,59 @@
-import axios from "axios";
-import React from "react"
+import jwtDecode from "jwt-decode"
+import React,{useState,useEffect} from "react"
+import AuthContext from "../../../context/JWTAuthContext"
+import useAuth from "../../../hooks/useAuth"
+import history from "../../../history"
+import { toast } from 'react-toastify';
+
+
 
 export default function Login() {
+  
+
+  const {login}=useAuth()
+    const [loginData,setLoginData] = useState({
+        email:'',
+        password:'',
+    })
+
+    useEffect(() => {
+      const token = localStorage.getItem('token')
+     if(token){
+      const decodedToken = jwtDecode(token)
+      const currentTime = Date.now()/1000
+      if(decodedToken.exp>currentTime){
+          return history.pushState()
+      }
+     }
+  }, [])
+
+  const handleChange = (e)=>{
+        
+    const {type,value}=e.target;
+    if(type==='text'){
+        setLoginData((prevState)=>({...prevState,email:value}))
+    }else{
+        setLoginData((prevState)=>({...prevState,password:value}))
+ 
+    }
+}
+
+const handleSubmit = async (e)=>{
+  e.preventDefault();
+ try {
+     if(loginData.email.length<15 || loginData.password.length<8){
+         return toast.error('En az 8 karakter girmelisiniz')
+     }
+     await login(loginData).then(()=>{
+         history.push('/')
+         toast.success('Hoşgeldiniz')
+      })
+         .catch(e=>
+          toast.error('Hatalı kullanıcı adı veya şifre'))
+     
+ } catch (e) {
+ }
+}
 
 
     return (
@@ -31,27 +83,29 @@ export default function Login() {
                           Enter your username &amp; password to login
                         </p>
                       </div>
-                      <form className="row g-3 needs-validation" noValidate>
+                      <form className="row g-3 needs-validation" noValidate onSubmit={handleSubmit} >
                         <div className="col-12">
-                          <label htmlFor="yourUsername" className="form-label">
-                            Username
+                          <label htmlFor="yourEmail" className="form-label">
+                            Email
                           </label>
                           <div className="input-group has-validation">
                             <span
                               className="input-group-text"
                               id="inputGroupPrepend"
                             >
-                              @
+                              
                             </span>
                             <input
                               type="text"
-                              name="username"
+                              name="email"
                               className="form-control"
-                              id="yourUsername"
+                              id="yourEmail"
+                              value={loginData.email}
+                              onChange={handleChange}
                               required
                             />
                             <div className="invalid-feedback">
-                              Please enter your username.
+                              Emailinizi giriniz.
                             </div>
                           </div>
                         </div>
@@ -65,41 +119,21 @@ export default function Login() {
                             className="form-control"
                             id="yourPassword"
                             required
+                            value={loginData.password}
+                            onChange={handleChange}
                           />
                           <div className="invalid-feedback">
-                            Please enter your password!
+                            Şifrenizi giriniz.
                           </div>
                         </div>
-                        <div className="col-12">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              name="remember"
-                              defaultValue="true"
-                              id="rememberMe"
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="rememberMe"
-                            >
-                              Remember me
-                            </label>
-                          </div>
-                        </div>
+                       
                         <div className="col-12">
                           <button
                             className="btn btn-primary w-100"
                             type="submit"
                           >
-                            Login
+                            Giriş Yap
                           </button>
-                        </div>
-                        <div className="col-12">
-                          <p className="small mb-0">
-                            Don't have account?{" "}
-                            <a href="pages-register.html">Create an account</a>
-                          </p>
                         </div>
                       </form>
                     </div>

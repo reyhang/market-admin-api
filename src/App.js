@@ -17,6 +17,7 @@ import AuthGuard from "./Auth/AuthGuard";
 import AppContext from "./context/AppContext";
 import routes from "./RootRoutes";
 import { Suspense } from "react";
+
 function App() {
   return (
     <AppContext.Provider value={{ routes }}>
@@ -31,26 +32,26 @@ function App() {
         draggable
         pauseOnHover
       />
-      <BrowserRouter basename="http://localhost:3002">
+      <BrowserRouter basename="http://localhost:3001">
         <Router history={history}>
           <AuthProvider>
-            <Route path="/login" component={Login} />
-            <Header />
+            <Route path="/login" exact={true} component={Login} />
 
             <AuthGuard>
               <div className="App">
                 <Sidebar />
-
+                <Header />
                 <Suspense>
                   <Switch>
-                    <Route path="/" exact component={<Dashboard />} />
-                    <Route path="/products" component={<DataTable />} />
-                    <Route path="/products/add" component={<AddProduct />} />
+                    <Route path="/dashboard" exact component={Dashboard} />
+                    <Route path="/products" exact={true} component={DataTable} />
+                    <Route path="/products/add" exact={true} component={AddProduct} />
                     <Route
-                      path="/products/update/:id"
-                      component={<UpdateProduct />}
+                      path="/products/update/:id" 
+                      exact={true}
+                      component={UpdateProduct}
                     />
-                    <Route path="/test" component={<Test />} />
+                    <Route path="/test" component={Test} />
 
                     <Redirect from="/" to="/dashboard" />
                   </Switch>

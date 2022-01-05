@@ -1,30 +1,30 @@
 import React, {createContext,useEffect,useReducer} from 'react'
 import jwtDecode from 'jwt-decode'
 import axios from '../axios'
+import { Redirect } from 'react-router'
 
 const initalState = {
     isAuthenticated : false,
     isInitialised : false,
-    user: null,
+    user: null, 
 }
 
-const isValidToken = (accessToken)=>{
-    if(!accessToken){
+const isValidToken = (token)=>{
+    if(!token){
         console.log('failed access')
         return false
     }
-    const decodedToken = jwtDecode(accessToken)
+    const decodedToken = jwtDecode(token)
     const currentTime = Date.now()/1000
     return  decodedToken.exp>currentTime
 }
 
-const setSession = (accessToken)=>{
-    if(accessToken){
-        localStorage.setItem('accessToken',accessToken)
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+const setSession = (token)=>{
+    if(token){
+        localStorage.setItem('token',token)
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
     }else{
-        localStorage.removeItem('accesToken')
-        delete axios.defaults.headers.common.Authorization
+        localStorage.removeItem('token')
     }
 }
 
@@ -64,26 +64,26 @@ const AuthContext = createContext({
     ...initalState,
     method:'JWT',
     login:()=>Promise.resolve(),
-    logout:()=>{},
+    logout:()=>{<Redirect to='/login' />},
 })
 
 export const AuthProvider = ({children})=>{
     const [state,dispatch]=useReducer(reducer,initalState)
 
     const login = async (data)=>{
-        const response = await axios.post(`${process.env.REACT_APP_API_BASENAME}/user/login`,{
-            username:data.username,
+        const response = await axios.post(`http://localhost:3000/admin-repo`,{
+            email:data.email,
             password:data.password,
         })
-        const {accessToken,user_id,username,level}=response.data
-        setSession(accessToken)
+        const {token,id,email,surname}=response.data
+        setSession(token)
         dispatch({
             type:'LOGIN',
             payload:{
                 user:{
-                    user_id,
-                    username,
-                    level,
+                    id,
+                    email,
+                    surname
                 }
             }
         })
@@ -97,10 +97,10 @@ export const AuthProvider = ({children})=>{
     useEffect(()=>{
         (async ()=>{
             try {
-                const accessToken = window.localStorage.getItem('accessToken')
+                const token = window.localStorage.getItem('token')
 
-                if(accessToken&&isValidToken(accessToken)){
-                    setSession(accessToken)
+                if(token&&isValidToken(token)){
+                    setSession(token)
                     dispatch({
                         type:'INIT',
                         payload:{
