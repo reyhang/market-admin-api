@@ -1,25 +1,26 @@
-import './App.css';
-import Header from "./components/Layout/Header/Header"
-import Sidebar from "./components/Layout/Sidebar/Sidebar"
-import Footer from './components/Layout/Footer/Footer';
-import DataTable from './components/Views/DataTable.js/DataTable';
-import AddProduct from './components/Views/Product/AddProduct';
-import Dashboard from './components/Views/Dashboard';
-import UpdateProduct from './components/Views/Product/UpdateProduct'
-import { ToastContainer } from 'react-toastify';
-
-import { Route, Routes } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
-import Login from './components/Views/Login/Login';
-import Test from './components/Views/DataTable.js/Test';
-
+import "./App.css";
+import Header from "./components/Layout/Header/Header";
+import Sidebar from "./components/Layout/Sidebar/Sidebar";
+import Footer from "./components/Layout/Footer/Footer";
+import DataTable from "./components/Views/DataTable.js/DataTable";
+import AddProduct from "./components/Views/Product/AddProduct";
+import Dashboard from "./components/Views/Dashboard";
+import UpdateProduct from "./components/Views/Product/UpdateProduct";
+import { ToastContainer } from "react-toastify";
+import history from './history'
+import { Redirect, Route, Router, Switch } from "react-router";
+import { BrowserRouter } from "react-router-dom";
+import Login from "./components/Views/Login/Login";
+import Test from "./components/Views/DataTable.js/Test";
+import { AuthProvider } from "./context/JWTAuthContext";
+import AuthGuard from "./Auth/AuthGuard";
+import AppContext from "./context/AppContext";
+import routes from "./RootRoutes";
+import { Suspense } from "react";
 function App() {
   return (
-
-   
-    <BrowserRouter>
-      <div className="App">
-        <ToastContainer
+    <AppContext.Provider value={{ routes }}>
+      <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -29,26 +30,38 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-       
-        />
-        <Header />
-        <Sidebar />
+      />
+      <BrowserRouter basename="http://localhost:3002">
+        <Router history={history}>
+          <AuthProvider>
+            <Route path="/login" component={Login} />
+            <Header />
 
-        <Routes>          
-     <Route path="/login" element={<Login />} />
+            <AuthGuard>
+              <div className="App">
+                <Sidebar />
 
-     
-          <Route path="/"  element={<Dashboard />} />
-          <Route path="/products" element={<DataTable />} />
-          <Route path="/products/add" element={<AddProduct />} />
-          <Route path="/products/update/:id" element={<UpdateProduct />} />
-          <Route path="/test" element={<Test />} />
+                <Suspense>
+                  <Switch>
+                    <Route path="/" exact component={<Dashboard />} />
+                    <Route path="/products" component={<DataTable />} />
+                    <Route path="/products/add" component={<AddProduct />} />
+                    <Route
+                      path="/products/update/:id"
+                      component={<UpdateProduct />}
+                    />
+                    <Route path="/test" component={<Test />} />
 
-        </Routes>
-
-        <Footer />
-      </div>
-    </BrowserRouter>
+                    <Redirect from="/" to="/dashboard" />
+                  </Switch>
+                </Suspense>
+                <Footer />
+              </div>
+            </AuthGuard>
+          </AuthProvider>
+        </Router>
+      </BrowserRouter>
+    </AppContext.Provider>
   );
 }
 

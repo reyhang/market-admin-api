@@ -1,7 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
+
+
 
 export default function AddProduct() {
   const [product, setProduct] = useState({
@@ -11,12 +14,16 @@ export default function AddProduct() {
     imageUrl: "",
   });
 
+  const [ data, setData ] = React.useState('Barkodu Kameraya Okutunuz.');
+
+
   const handleChange = (event) => {
     setProduct({ ...product, [event.target.name]: event.target.value });
   };
 
   const addProduct = async (e) => {
     e.preventDefault();
+
 
     await axios
       .post("http://localhost:3000/products", product)
@@ -66,13 +73,13 @@ export default function AddProduct() {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title"></h5>
+                <h5 className="card-title">-</h5>
 
                 <form
-                  className="row g-4 justify-content-center"
+                  className="col-12 justify-content-center"
                   onSubmit={addProduct}
                 >
-                  <div className="col-6">
+                  <div className="col-5">
                     <label className="form-label">Ürün İsmi</label>
                     <input
                       className="form-control"
@@ -83,7 +90,7 @@ export default function AddProduct() {
                       required
                     />
                   </div>
-                  <div className="col-4">
+                  <div className="col-5">
                     <label className="form-label">Ürün Fiyatı</label>
                     <input
                       type="text"
@@ -93,19 +100,8 @@ export default function AddProduct() {
                       onChange={handleChange}
                       required
                     />
-                  </div>
-                  <div className="col-4">
-                    <label className="form-label">Barkod Numarası</label>
-                    <input
-                      type="string"
-                      className="form-control"
-                      name="barcode"
-                      value={product.barcode}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="col-6">
+                  </div>{" "}
+                  <div className="col-5">
                     <label className="form-label">Ürün Fotoğrafı</label>
                     <input
                       type="text"
@@ -115,6 +111,31 @@ export default function AddProduct() {
                       onChange={handleChange}
                       required
                     />
+                  </div>
+                  <div className="col-5">
+                    <label className="form-label">Barkod Numarası</label>
+                       <BarcodeScannerComponent
+                      width={250}
+                      height={200}
+                        onUpdate={(err, result) => {
+                          setData(result.text)
+                     
+                      }}
+                    />
+                    
+                    <input
+                      type="string"
+                      className="form-control"
+                      name="barcode"
+                      value={data}
+                      onChange={handleChange}
+                      required
+                      
+                    /> 
+                    
+                   
+                 
+                   
                   </div>
                   <div className="text-center" style={{ marginTop: 55 }}>
                     <button

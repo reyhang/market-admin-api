@@ -1,4 +1,3 @@
-import { Icon } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link,useParams } from "react-router-dom";
@@ -93,8 +92,7 @@ const updateProduct =  (e) => {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title"></h5>
-
+                <h5 className="card-title"> - </h5>
                 <form className="row g-4  justify-content-center" onSubmit={updateProduct}>
                   <div className="col-6">
                     <label className="form-label" >Ürün İsmi</label>
